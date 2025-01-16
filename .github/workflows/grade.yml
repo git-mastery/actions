@@ -31,7 +31,6 @@ jobs:
       - name: Set repository name
         run: echo "REPO_NAME=$(echo ${{ env.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
       - name: All environment variables
-        if: ${{ env.is_local }}
         run: |
           echo ${{ env.internal_pat }}
           echo ${{ env.is_local }}
