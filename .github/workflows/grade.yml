@@ -40,8 +40,6 @@ jobs:
       - name: Checking out current repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.repository }}
-          token: ${{ env.internal_pat }}
           path: main
       - name: Checking out solutions repository
         uses: actions/checkout@v4
