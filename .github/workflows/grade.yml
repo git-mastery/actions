@@ -4,7 +4,7 @@ on: pull_request
 
 env:
   internal_pat: ${{ secrets.ORG_PAT }}
-  is_local: ${{ env.ACT || 'false' }}
+  is_local: ${{ env.ACT == 'true' }}
   pr_number: ${{ github.event.number }}
   repository: ${{ github.repository }}
 
@@ -13,26 +13,26 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Environment variables
-        if: ${{ env.is_local == 'true' }}
+        if: ${{ env.is_local }}
         run: |
           echo ${{ env.internal_pat }}
           echo ${{ env.is_local }}
           echo ${{ env.pr_number }}
       - name: Installing Python (only on act)
-        if: ${{ env.is_local == 'true' }}
+        if: ${{ env.is_local }}
         run: | 
           apt update
           apt install -y python3 python3-pip git
       - name: Repository name
-        if: ${{ env.is_local == 'true' }}
+        if: ${{ env.is_local }}
         run: echo ${{ github.repository }} | cut -d'/' -f2
       - name: Set repository name
         run: echo "REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
       - name: Get repo name
-        if: ${{ env.is_local == 'true' }}
+        if: ${{ env.is_local }}
         run: echo ${{ env.REPO_NAME }}
       - name: PAT
-        if: ${{ env.is_local == 'true' }}
+        if: ${{ env.is_local }}
         run: echo ${{ secrets.ORG_PAT }}
       - name: Checking out current repository
         uses: actions/checkout@v4
@@ -45,10 +45,10 @@ jobs:
           token: ${{ secrets.ORG_PAT }}
           path: solution/
       - name: Current file structure
-        if: ${{ env.is_local == 'true' }}
+        if: ${{ env.is_local }}
         run: ls ../*/* -a
       - name: Setup Python (only on Github Actions)
-        if: ${{ env.is_local == 'false' }}
+        if: ${{ ! env.is_local }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
