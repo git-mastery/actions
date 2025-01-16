@@ -30,6 +30,14 @@ jobs:
           apt install -y python3 python3-pip git
       - name: Set repository name
         run: echo "REPO_NAME=$(echo ${{ env.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+      - name: All environment variables
+        if: ${{ env.is_local }}
+        run: |
+          echo ${{ env.internal_pat }}
+          echo ${{ env.is_local }}
+          echo ${{ env.pr_number }}
+          echo ${{ env.repository }}
+          echo ${{ env.REPO_NAME }}
       - name: Checking out current repository
         uses: actions/checkout@v4
         with:
