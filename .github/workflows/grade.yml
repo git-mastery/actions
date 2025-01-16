@@ -13,29 +13,23 @@ on:
         repository:
           require: true
 
-env:
-  internal_pat: ${{ secrets.personal_access_token }}
-  is_local: ${{ secrets.is_local }}
-  pr_number: ${{ secrets.pr_number }}
-  repository: ${{ secrets.repository }}
-
 jobs:
   autograding:
     runs-on: ubuntu-22.04
     steps:
       - name: Installing Python (only on act)
-        if: ${{ env.is_local }}
+        if: ${{ secrets.is_local }}
         run: | 
           apt update
           apt install -y python3 python3-pip git
       - name: Set repository name
-        run: echo "REPO_NAME=$(echo ${{ env.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+        run: echo "REPO_NAME=$(echo ${{ secrets.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
       - name: All environment variables
         run: |
-          echo ${{ env.internal_pat }}
-          echo ${{ env.is_local }}
-          echo ${{ env.pr_number }}
-          echo ${{ env.repository }}
+          echo ${{ secrets.internal_pat }}
+          echo ${{ secrets.is_local }}
+          echo ${{ secrets.pr_number }}
+          echo ${{ secrets.repository }}
           echo ${{ env.REPO_NAME }}
       - name: Checking out current repository
         uses: actions/checkout@v4
@@ -45,10 +39,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: git-mastery/solution-${{ env.REPO_NAME }}
-          token: ${{ env.internal_pat }}
+          token: ${{ secrets.personal_access_token }}
           path: solution/
       - name: Setup Python (only on Github Actions)
-        if: ${{ ! env.is_local }}
+        if: ${{ ! secrets.is_local }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
