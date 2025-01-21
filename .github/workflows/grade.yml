@@ -42,6 +42,7 @@ jobs:
           repository: git-mastery/solution-${{ env.REPO_NAME }}
           token: ${{ secrets.ORG_PAT }}
           path: solution/
+          fetch-depth: 0
       - name: Setup Python (only on Github Actions)
         if: ${{ ! inputs.is_local }}
         uses: actions/setup-python@v5
