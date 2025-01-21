@@ -46,7 +46,7 @@ jobs:
         if: ${{ ! inputs.is_local }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - name: Installing Python dependencies
         run: |
           pip install GitPython PyGithub difflib-parser
