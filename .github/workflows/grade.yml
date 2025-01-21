@@ -49,7 +49,7 @@ jobs:
           python-version: "3.11"
       - name: Installing Python dependencies
         run: |
-          pip install GitPython PyGithub
+          pip install GitPython PyGithub difflib-parser
       - name: Run Python
         run: python3 grade.py
         working-directory: solution
