@@ -3,46 +3,47 @@ name: Autograding
 on: 
   workflow_call:
     inputs:
-      secrets:
-        personal_access_token:
-          required: true
-        is_local:
-          require: true
-        pr_number:
-          required: true
-        repository:
-          require: true
+      repository:
+        required: true
+        type: string
+      is_local:
+        required: true
+        type: boolean
+      actor:
+        required: true
+        type: string
 
 jobs:
   autograding:
     runs-on: ubuntu-22.04
     steps:
+      - name: Variables
+        run: |
+          echo ${{ inputs.repository }}
+          echo ${{ inputs.is_local }}
+          echo ${{ inputs.actor }}
       - name: Installing Python (only on act)
-        if: ${{ secrets.is_local }}
+        if: ${{ inputs.is_local }}
         run: | 
           apt update
           apt install -y python3 python3-pip git
       - name: Set repository name
-        run: echo "REPO_NAME=$(echo ${{ secrets.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
-      - name: All environment variables
-        run: |
-          echo ${{ secrets.internal_pat }}
-          echo ${{ secrets.is_local }}
-          echo ${{ secrets.pr_number }}
-          echo ${{ secrets.repository }}
-          echo ${{ env.REPO_NAME }}
-      - name: Checking out current repository
+        run: echo "REPO_NAME=$(echo ${{ inputs.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+      - name: Checking out submission repository
         uses: actions/checkout@v4
         with:
+          repository: ${{ inputs.actor }}/${{ env.REPO_NAME }}
+          token: ${{ secrets.ORG_PAT }}
           path: main
+          fetch-depth: 0
       - name: Checking out solutions repository
         uses: actions/checkout@v4
         with:
           repository: git-mastery/solution-${{ env.REPO_NAME }}
-          token: ${{ secrets.personal_access_token }}
+          token: ${{ secrets.ORG_PAT }}
           path: solution/
       - name: Setup Python (only on Github Actions)
-        if: ${{ ! secrets.is_local }}
+        if: ${{ ! inputs.is_local }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -52,5 +53,11 @@ jobs:
       - name: Run Python
         run: python3 grade.py
         working-directory: solution
-            
+        env:
+          base_repository: ${{ inputs.repository }}
+          is_local: ${{ inputs.is_local }}
+          repository_name: ${{ env.REPO_NAME }}
+                    
+
+
 
