@@ -53,13 +53,16 @@ jobs:
         run: |
           pip install -r requirements.txt
       - name: Run Python
-        run: python3 grade.py
+        run: |
+          python3 grade.py
         working-directory: solution
         env:
           base_repository: ${{ inputs.repository }}
           is_local: ${{ inputs.is_local }}
           repository_name: ${{ env.REPO_NAME }}
-      - name: Print output
-        working-directory: output
+      - name: Copy Python script output to root folder
+        run: |
+          cp output/output.json ./output.json
+      - name: Current directory files
         run: |
           ls
