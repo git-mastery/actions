@@ -122,6 +122,7 @@ jobs:
               }
 
               const studentId = context.payload.sender.id
+              console.log(studentId)
 
               const studentProgressFile = await github.rest.repos.getContent({
                 owner: context.repo.owner,
@@ -131,5 +132,6 @@ jobs:
               console.log(studentProgressFile)
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
+              console.log(err)
               core.setFailed(err)
             }
