@@ -137,8 +137,7 @@ jobs:
               const jsonString = fs.readFileSync('./output.json')
               const content = JSON.parse(jsonString)
               const studentId = context.payload.sender.id
-              console.log(studentId)
-              let progressContent
+
               const entry = { 
                 "exercise_name": process.env.REPO_NAME, 
                 "started_at": process.env.START, 
@@ -151,21 +150,26 @@ jobs:
                   repo: "progress-tracker",
                   path: `progress/${studentId}.json`
                 })
-                console.log(studentProgressFile)
-                const existingFileContents = JSON.parse(studentProgressFile) 
+                const existingFileContents = JSON.parse(atob(studentProgressFile.data.content)) 
+                const sha = studentProgressFile.data.sha
                 existingFileContents.push(entry)
-                progressContent = btoa(JSON.stringify(existingFileContents))
+                await github.rest.repos.createOrUpdateFileContents({
+                  owner: context.repo.owner,
+                  repo: "progress-tracker",
+                  path: `progress/${studentId}.json`,
+                  sha: sha,
+                  message: `Progress update for ${context.payload.sender.login} for exercise ${process.env.REPO_NAME}`,
+                  content: btoa(JSON.stringify(existingFileContents))
+                })
               } catch (err) {
-                progressContent = btoa(JSON.stringify([entry]))
+                await github.rest.repos.createOrUpdateFileContents({
+                  owner: context.repo.owner,
+                  repo: "progress-tracker",
+                  path: `progress/${studentId}.json`,
+                  message: `Progress update for ${context.payload.sender.login} for exercise ${process.env.REPO_NAME}`,
+                  content: btoa(JSON.stringify([entry]))
+                })
               }
-              console.log(progressContent)
-              await github.rest.repos.createOrUpdateFileContents({
-                owner: context.repo.owner,
-                repo: "progress-tracker",
-                path: `progress/${studentId}.json`,
-                message: `Progress update for ${context.payload.sender.login} for exercise ${process.env.REPO_NAME}`,
-                content: progressContent
-              })
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
               console.log(err)
