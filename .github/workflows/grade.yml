@@ -122,7 +122,20 @@ jobs:
                   body: body,
                 })
               }
-
+            } catch(err) {
+              core.error("Error while reading or parsing the JSON")
+              console.log(err)
+              core.setFailed(err)
+            }
+      - name: Publish progress
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.MY_PAT }}
+          script: |
+            try {
+              const fs = require('fs')
+              const jsonString = fs.readFileSync('./output.json')
+              const content = JSON.parse(jsonString)
               const studentId = context.payload.sender.id
               console.log(studentId)
               let progressContent
@@ -142,7 +155,6 @@ jobs:
                 existingFileContents.push(entry)
                 progressContent = btoa(JSON.stringify(existingFileContents))
               } catch (err) {
-                console.log(err)
                 progressContent = btoa(JSON.stringify([entry]))
               }
               console.log(progressContent)
