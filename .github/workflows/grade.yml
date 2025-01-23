@@ -59,3 +59,7 @@ jobs:
           base_repository: ${{ inputs.repository }}
           is_local: ${{ inputs.is_local }}
           repository_name: ${{ env.REPO_NAME }}
+      - name: Print output
+        working-directory: output
+        run: |
+          ls
