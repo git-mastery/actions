@@ -121,7 +121,7 @@ jobs:
                 })
               }
 
-              const studentId = context.sender.id
+              const studentId = context.payload.sender.id
 
               const studentProgressFile = await github.rest.repos.getContent({
                 owner: context.repo.owner,
