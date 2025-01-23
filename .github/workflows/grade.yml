@@ -144,6 +144,7 @@ jobs:
               } catch (err) {
                 progressContent = btoa(JSON.stringify([file]))
               }
+              console.log(progressContent)
               await github.rest.repos.createOrUpdateFileContents({
                 owner: context.repo.owner,
                 repo: "progress-tracker",
