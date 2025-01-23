@@ -125,7 +125,7 @@ jobs:
 
               const studentId = context.payload.sender.id
               console.log(studentId)
-              let content;
+              let progressContent
               const entry = { 
                 "exercise_name": process.env.REPO_NAME, 
                 "started_at": process.env.START, 
@@ -140,16 +140,16 @@ jobs:
                 })
                 const existingFileContents = JSON.parse(studentProgressFile) 
                 existingFileContents.push(entry)
-                content = btoa(JSON.stringify(existingFileContents))
+                progressContent = btoa(JSON.stringify(existingFileContents))
               } catch (err) {
-                content = btoa(JSON.stringify([file]))
+                progressContent = btoa(JSON.stringify([file]))
               }
               await github.rest.repos.createOrUpdateFileContents({
                 owner: context.repo.owner,
                 repo: "progress-tracker",
                 path: `progress/${studentId}.json`,
                 message: `Progress update for ${context.payload.sender.login} for exercise ${process.env.REPO_NAME}`,
-                content: content
+                content: progressContent
               })
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
