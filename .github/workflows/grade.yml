@@ -103,7 +103,7 @@ jobs:
               console.log(statusCommentId)
               if (content["errors"].length > 0) {
                 let body = "|Name|Details|\n|---|---|\n|Status|Unsuccessful ❌|\n|Comments|<ul>"
-                for (const comment of content["error"]) {
+                for (const comment of content["errors"]) {
                   body += `<li>${comment}</li>`
                 }
                 body += "</ul>"
