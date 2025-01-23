@@ -142,6 +142,7 @@ jobs:
                 existingFileContents.push(entry)
                 progressContent = btoa(JSON.stringify(existingFileContents))
               } catch (err) {
+                console.log(err)
                 progressContent = btoa(JSON.stringify([file]))
               }
               console.log(progressContent)
