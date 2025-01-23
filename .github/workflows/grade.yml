@@ -127,7 +127,8 @@ jobs:
               const studentProgressFile = await github.rest.repos.getContent({
                 owner: context.repo.owner,
                 repo: "progress-tracker",
-                path: `progress/${studentId}.json`,
+                # path: `progress/${studentId}.json`,
+                path: `README.md`,
               })
               console.log(studentProgressFile)
             } catch(err) {
