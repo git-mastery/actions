@@ -78,7 +78,8 @@ jobs:
             try {
               const fs = require('fs')
               const jsonString = fs.readFileSync('./output.json')
-              var apps = JSON.parse(jsonString)
+              const apps = JSON.parse(jsonString)
+              console.log(apps)
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
               core.setFailed(err)
