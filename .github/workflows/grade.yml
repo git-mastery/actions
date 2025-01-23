@@ -36,6 +36,7 @@ jobs:
         run: |
           echo "REPO_NAME=$(echo ${{ inputs.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
           echo "STATUS_COMMENT_ID=$(echo ${{ steps.status-comment.outputs.result }})" >> $GITHUB_ENV
+          echo "START=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Variables
         run: |
           echo ${{ inputs.repository }}
@@ -43,6 +44,7 @@ jobs:
           echo ${{ inputs.actor }}
           echo ${{ env.REPO_NAME }}
           echo ${{ env.STATUS_COMMENT_ID }}
+          echo ${{ env.START }}
       - name: Installing Python (only on act)
         if: ${{ inputs.is_local }}
         run: |
@@ -123,13 +125,32 @@ jobs:
 
               const studentId = context.payload.sender.id
               console.log(studentId)
+              let content;
+              const entry = { 
+                "exercise_name": process.env.REPO_NAME, 
+                "started_at": process.env.START, 
+                "comments": content["errors"] 
+              }
 
-              const studentProgressFile = await github.rest.repos.getContent({
+              try {
+                const studentProgressFile = await github.rest.repos.getContent({
+                  owner: context.repo.owner,
+                  repo: "progress-tracker",
+                  path: `progress/${studentId}.json`
+                })
+                const existingFileContents = JSON.parse(studentProgressFile) 
+                existingFileContents.push(entry)
+                content = btoa(JSON.stringify(existingFileContents))
+              } catch (err) {
+                content = btoa(JSON.stringify([file]))
+              }
+              await github.rest.repos.createOrUpdateFileContents({
                 owner: context.repo.owner,
                 repo: "progress-tracker",
-                path: "README.md",
+                path: `progress/${studentId}.json`,
+                message: `Progress update for ${context.payload.sender.login} for exercise ${process.env.REPO_NAME}`,
+                content: content
               })
-              console.log(studentProgressFile)
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
               console.log(err)
