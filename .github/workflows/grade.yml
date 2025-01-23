@@ -98,9 +98,12 @@ jobs:
             try {
               const fs = require('fs')
               const jsonString = fs.readFileSync('./output.json')
-              const output = JSON.parse(jsonString)
+              const content = JSON.parse(jsonString)
               const statusCommentId = new Number(process.env.STATUS_COMMENT_ID)
               console.log(statusCommentId)
+              if (content["errors"].length > 0) {
+                console.log(content["errors"]
+              }
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
               core.setFailed(err)
