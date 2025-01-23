@@ -31,7 +31,6 @@ jobs:
               body: "We have started grading your submission! Be patient!",
             })
             const commentId = comment["data"]["id"]
-            console.log(commentId)
             return commentId
       - name: Exporting environment variables
         run: |
@@ -99,7 +98,7 @@ jobs:
               const fs = require('fs')
               const jsonString = fs.readFileSync('./output.json')
               const content = JSON.parse(jsonString)
-              const statusCommentId = new Number(process.env.STATUS_COMMENT_ID)
+              const statusCommentId = process.env.STATUS_COMMENT_ID
               console.log(statusCommentId)
               if (content["errors"].length > 0) {
                 let body = "|Name|Details|\n|---|---|\n|Status|Unsuccessful ❌|\n|Comments|<ul>"
