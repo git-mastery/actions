@@ -49,6 +49,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Installing Python dependencies
+        working-directory: solution
         run: |
           pip install -r requirements.txt
       - name: Run Python
