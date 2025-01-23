@@ -33,13 +33,17 @@ jobs:
             const commentId = comment["data"]["id"]
             console.log(commentId)
             return commentId
+      - name: Exporting environment variables
+        run: |
+          echo "REPO_NAME=$(echo ${{ inputs.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+          echo "STATUS_COMMENT_ID=$(echo ${{ steps.status-comment.outputs.result }})" >> $GITHUB_ENV
       - name: Variables
         run: |
           echo ${{ inputs.repository }}
           echo ${{ inputs.is_local }}
           echo ${{ inputs.actor }}
-      - name: Set repository name
-        run: echo "REPO_NAME=$(echo ${{ inputs.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+          echo ${{ env.REPO_NAME }}
+          echo ${{ env.STATUS_COMMENT_ID }}
       - name: Installing Python (only on act)
         if: ${{ inputs.is_local }}
         run: |
@@ -96,6 +100,7 @@ jobs:
               const jsonString = fs.readFileSync('./output.json')
               const apps = JSON.parse(jsonString)
               console.log(apps)
+              console.log(process.env)
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
               core.setFailed(err)
