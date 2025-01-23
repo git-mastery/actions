@@ -151,6 +151,7 @@ jobs:
                   repo: "progress-tracker",
                   path: `progress/${studentId}.json`
                 })
+                console.log(studentProgressFile)
                 const existingFileContents = JSON.parse(studentProgressFile) 
                 existingFileContents.push(entry)
                 progressContent = btoa(JSON.stringify(existingFileContents))
