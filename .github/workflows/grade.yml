@@ -117,7 +117,7 @@ jobs:
               const emoji = status === "SUCCESSFUL" ? "✅" : status === "UNSUCCESSFUL" ? "❌" : "⚠️"
               const statusMessage = `${status} ${emoji}`
 
-              const joinedComments = content["comments"].map(comment => "<li>" + comment + "</li>").join("\n")
+            const joinedComments = content["comments"].length > 0 ? content["comments"].map(comment => "<li>" + comment + "</li>").join("\n") : "No comments"
 
               let body = `## Autograding status...
 
