@@ -127,38 +127,23 @@ jobs:
 
               let body = `## Autograding status...
 
-              |Name|Details|
-              |----|-------|
-              |Exercise name|${exerciseName}|
-              |Status|${statusMessage}|
-              |Job started at|${startedAt.toString()}|
-              |Job completed at|${completedAt.toString()}|
-              |Job took|${completedAt.getTime() - startedAt.getTime()} ms|
-              |Comments|<ul>${joinedComments}</ul>|`
+            |Name|Details|
+            |----|-------|
+            |Exercise name|${exerciseName}|
+            |Status|${statusMessage}|
+            |Job started at|${startedAt.toString()}|
+            |Job completed at|${completedAt.toString()}|
+            |Job took|${completedAt.getTime() - startedAt.getTime()} ms|
+            |Comments|<ul>${joinedComments}</ul>|`
               const cleanBody = body.replace(/  +g/, '')
               console.log(cleanBody)
 
-              if (content["errors"].length > 0) {
-                let body = "## Autograding status\n|Name|Details|\n|---|---|\n|Status|Unsuccessful ❌|\n|Comments|<ul>"
-                for (const comment of content["errors"]) {
-                  body += `<li>${comment}</li>`
-                }
-                body += "</ul>"
-                await github.rest.issues.updateComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: statusCommentId,
-                  body: body,
-                })
-              } else {
-                let body = "## Autograding status\n|Name|Details|\n|---|---|\n|Status|Successful ✅|\n|Comments|Great work! On to the next one!</ul>"
-                await github.rest.issues.updateComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: statusCommentId,
-                  body: body,
-                })
-              }
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: statusCommentId,
+                body: cleanBody,
+              })
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
               core.setFailed(err)
