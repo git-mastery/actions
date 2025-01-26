@@ -88,7 +88,7 @@ jobs:
         env:
           base_repository: ${{ inputs.repository }}
           is_local: ${{ inputs.is_local }}
-          # repository_name: ${{ env.REPO_NAME }}
+          repository_name: ${{ env.REPO_NAME }}
 
       - name: Update status comment with error status
         if: ${{ failure() }}
