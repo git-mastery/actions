@@ -157,7 +157,9 @@ jobs:
               const entry = { 
                 "exercise_name": process.env.REPO_NAME, 
                 "started_at": content["started_at"], 
-                "comments": content["comments"] 
+                "completed_at": content["completed_at"], 
+                "comments": content["comments"],
+                "status": content["status"],
               }
 
               try {
