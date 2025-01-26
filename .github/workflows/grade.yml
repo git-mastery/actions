@@ -107,9 +107,11 @@ jobs:
 
               const startedAt = new Date(0)
               startedAt.setUTCSeconds(content["started_at"])
+              console.log(startedAt)
 
               const completedAt = new Date(0)
               completedAt.setUTCSeconds(content["completed_at"])
+              console.log(completedAt)
 
               const exerciseName = content["exercise_name"]
 
