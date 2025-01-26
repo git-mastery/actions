@@ -107,23 +107,17 @@ jobs:
 
               const startedAt = new Date(0)
               startedAt.setUTCSeconds(content["started_at"])
-              console.log(startedAt)
 
               const completedAt = new Date(0)
               completedAt.setUTCSeconds(content["completed_at"])
-              console.log(completedAt)
 
               const exerciseName = content["exercise_name"]
-              console.log(exerciseName)
 
               const status = content["status"]
-              console.log(status)
               const emoji = status === "SUCCESSFUL" ? "✅" : status === "UNSUCCESSFUL" ? "❌" : "⚠️"
-              console.log(emoji)
               const statusMessage = `${status} ${emoji}`
 
               const joinedComments = content["comments"].map(comment => "<li>" + comment + "</li>").join("\n")
-              console.log(joinedComments)
 
               let body = `## Autograding status...
 
@@ -131,8 +125,8 @@ jobs:
             |----|-------|
             |Exercise name|${exerciseName}|
             |Status|${statusMessage}|
-            |Job started at|${startedAt.toString()}|
-            |Job completed at|${completedAt.toString()}|
+            |Job started at|${startedAt.toLocaleString()}|
+            |Job completed at|${completedAt.toLocaleString()}|
             |Job took|${completedAt.getTime() - startedAt.getTime()} ms|
             |Comments|<ul>${joinedComments}</ul>|`
               const cleanBody = body.replace(/  +g/, '')
@@ -162,8 +156,8 @@ jobs:
 
               const entry = { 
                 "exercise_name": process.env.REPO_NAME, 
-                "started_at": process.env.START, 
-                "comments": content["errors"] 
+                "started_at": content["started_at"], 
+                "comments": content["comments"] 
               }
 
               try {
