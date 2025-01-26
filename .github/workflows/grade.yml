@@ -91,19 +91,6 @@ jobs:
           is_local: ${{ inputs.is_local }}
           repository_name: ${{ env.REPO_NAME }}
 
-      - name: Update status comment with error status
-        if: ${{ failure() }}
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const statusCommentId = process.env.STATUS_COMMENT_ID
-            await github.rest.issues.updateComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: statusCommentId,
-            body: "### Oops! Something happened with the autograder\nContact [woojiahao1234@gmail.com](mailto:woojiahao1234@gmail.com) about the issue.",
-            })
-
       - name: Copy Python script output to root folder
         run: |
           cp output/output.json ./output.json
@@ -191,3 +178,16 @@ jobs:
               core.error("Error while reading or parsing the JSON")
               core.setFailed(err)
             }
+
+      - name: Update status comment with error status
+        if: ${{ failure() }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const statusCommentId = process.env.STATUS_COMMENT_ID
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: statusCommentId,
+            body: "### Oops! Something happened with the autograder\nContact [woojiahao1234@gmail.com](mailto:woojiahao1234@gmail.com) about the issue.",
+            })
