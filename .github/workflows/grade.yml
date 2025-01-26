@@ -28,7 +28,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: "We have started grading your submission! Be patient!",
+              body: "## Autograding started!\nWe have started grading your submission! Be patient!",
             })
             const commentId = comment["data"]["id"]
             return commentId
@@ -40,6 +40,7 @@ jobs:
           echo "START=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
       - name: Variables
+        if: ${{ inputs.is_local }}
         run: |
           echo ${{ inputs.repository }}
           echo ${{ inputs.is_local }}
@@ -59,7 +60,7 @@ jobs:
         with:
           repository: ${{ inputs.actor }}/${{ env.REPO_NAME }}
           token: ${{ secrets.ORG_PAT }}
-          path: main
+          path: main/
           fetch-depth: 0
 
       - name: Checking out solutions repository
@@ -107,16 +108,6 @@ jobs:
         run: |
           cp output/output.json ./output.json
 
-      - name: Current directory files
-        run: |
-          ls
-
-      - name: Print context details
-        uses: actions/github-script@v7
-        with:
-          script: |
-            console.log(context)
-
       - name: Process output
         uses: actions/github-script@v7
         with:
@@ -127,7 +118,7 @@ jobs:
               const content = JSON.parse(jsonString)
               const statusCommentId = process.env.STATUS_COMMENT_ID
               if (content["errors"].length > 0) {
-                let body = "|Name|Details|\n|---|---|\n|Status|Unsuccessful ❌|\n|Comments|<ul>"
+                let body = "## Autograding status\n|Name|Details|\n|---|---|\n|Status|Unsuccessful ❌|\n|Comments|<ul>"
                 for (const comment of content["errors"]) {
                   body += `<li>${comment}</li>`
                 }
@@ -139,7 +130,7 @@ jobs:
                   body: body,
                 })
               } else {
-                let body = "|Name|Details|\n|---|---|\n|Status|Successful ✅|\n|Comments|Great work! On to the next one!</ul>"
+                let body = "## Autograding status\n|Name|Details|\n|---|---|\n|Status|Successful ✅|\n|Comments|Great work! On to the next one!</ul>"
                 await github.rest.issues.updateComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -149,7 +140,6 @@ jobs:
               }
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
-              console.log(err)
               core.setFailed(err)
             }
 
@@ -198,6 +188,5 @@ jobs:
               }
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
-              console.log(err)
               core.setFailed(err)
             }
