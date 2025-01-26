@@ -125,8 +125,8 @@ jobs:
             |----|-------|
             |**Exercise name**|${exerciseName}|
             |**Status**|${statusMessage}|
-            |**Job started at**|${startedAt.toLocaleString("zh-HK", { timeZone: "UTC" })}|
-            |**Job completed at**|${completedAt.toLocaleString("zh-HK", { timeZone: "UTC" })}|
+            |**Job started at**|${startedAt.toLocaleString("en-SG", { timeZone: "UTC" })}|
+            |**Job completed at**|${completedAt.toLocaleString("en-SG", { timeZone: "UTC" })}|
             |**Job took**|${completedAt.getTime() - startedAt.getTime()} ms|
             |**Comments**|<ul>${joinedComments}</ul>|`
               const cleanBody = body.replace(/  +g/, '')
