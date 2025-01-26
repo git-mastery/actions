@@ -123,12 +123,12 @@ jobs:
 
             |Name|Details|
             |----|-------|
-            |Exercise name|${exerciseName}|
-            |Status|${statusMessage}|
-            |Job started at|${startedAt.toLocaleString()}|
-            |Job completed at|${completedAt.toLocaleString()}|
-            |Job took|${completedAt.getTime() - startedAt.getTime()} ms|
-            |Comments|<ul>${joinedComments}</ul>|`
+            |**Exercise name**|${exerciseName}|
+            |**Status**|${statusMessage}|
+            |**Job started at**|${startedAt.toLocaleString()}|
+            |**Job completed at**|${completedAt.toLocaleString()}|
+            |**Job took**|${completedAt.getTime() - startedAt.getTime()} ms|
+            |**Comments**|<ul>${joinedComments}</ul>|`
               const cleanBody = body.replace(/  +g/, '')
               console.log(cleanBody)
 
