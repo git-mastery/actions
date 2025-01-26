@@ -104,18 +104,23 @@ jobs:
               const jsonString = fs.readFileSync('./output.json')
               const content = JSON.parse(jsonString)
               const statusCommentId = process.env.STATUS_COMMENT_ID
+
               const startedAt = new Date(0)
               startedAt.setUTCSeconds(content["started_at"])
               const completedAt = new Date(0)
+
               completedAt.setUTCSeconds(content["completed_at"])
               const exerciseName = content["exercise_name"]
+
               const status = content["status"]
-
               const emoji = status === "SUCCESSFUL" ? "✅" : status === "UNSUCCESSFUL" ? "❌" : "⚠️"
-
               const statusMessage = `${status} ${emoji}`
 
+              const joinedComments = content["comments"].map(comment => "<li>" + comment + "</li>").join("\n")
+              console.log(joinedComments)
+
               let body = `## Autograding status...
+
               |Name|Details|
               |----|-------|
               |Exercise name|${exerciseName}|
@@ -123,9 +128,10 @@ jobs:
               |Job started at|${startedAt.toString()}|
               |Job completed at|${completedAt.toString()}|
               |Job took|`${completedAt.getTime() - startedAt.getTime()}` ms|
-              |Comments|<ul>${content["comments"].map(comment => "<li>" + comment + "</li>").join("\n")}</ul>|
+              |Comments|<ul>${joinedComments}</ul>|
               `
-              console.log(body)
+              const cleanBody = body.replace(/  +g/, '')
+              console.log(cleanBody)
 
               if (content["errors"].length > 0) {
                 let body = "## Autograding status\n|Name|Details|\n|---|---|\n|Status|Unsuccessful ❌|\n|Comments|<ul>"
