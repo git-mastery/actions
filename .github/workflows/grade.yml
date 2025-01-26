@@ -105,16 +105,6 @@ jobs:
               const content = JSON.parse(jsonString)
               const statusCommentId = process.env.STATUS_COMMENT_ID
 
-              const startedAt = new Date(0)
-              startedAt.setUTCSeconds(content["started_at"])
-              console.log(startedAt)
-              console.log(startedAt.toLocaleString("en-SG"))
-
-              const completedAt = new Date(0)
-              completedAt.setUTCSeconds(content["completed_at"])
-              console.log(completedAt)
-              console.log(completedAt.toLocaleString("en-SG"))
-
               const exerciseName = content["exercise_name"]
 
               const status = content["status"]
@@ -129,9 +119,6 @@ jobs:
             |----|-------|
             |**Exercise name**|${exerciseName}|
             |**Status**|${statusMessage}|
-            |**Job started at**|${startedAt.toLocaleString("en-SG")}|
-            |**Job completed at**|${completedAt.toLocaleString("en-SG")}|
-            |**Job took**|${completedAt.getTime() - startedAt.getTime()} ms|
             |**Comments**|<ul>${joinedComments}</ul>|`
               const cleanBody = body.replace(/  +g/, '')
               console.log(cleanBody)
