@@ -107,13 +107,19 @@ jobs:
 
               const startedAt = new Date(0)
               startedAt.setUTCSeconds(content["started_at"])
-              const completedAt = new Date(0)
+              console.log(startedAt)
 
+              const completedAt = new Date(0)
               completedAt.setUTCSeconds(content["completed_at"])
+              console.log(completedAt)
+
               const exerciseName = content["exercise_name"]
+              console.log(exerciseName)
 
               const status = content["status"]
+              console.log(status)
               const emoji = status === "SUCCESSFUL" ? "✅" : status === "UNSUCCESSFUL" ? "❌" : "⚠️"
+              console.log(emoji)
               const statusMessage = `${status} ${emoji}`
 
               const joinedComments = content["comments"].map(comment => "<li>" + comment + "</li>").join("\n")
