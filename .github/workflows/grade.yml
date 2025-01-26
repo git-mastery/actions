@@ -103,8 +103,30 @@ jobs:
               const fs = require('fs')
               const jsonString = fs.readFileSync('./output.json')
               const content = JSON.parse(jsonString)
-              console.log(content)
               const statusCommentId = process.env.STATUS_COMMENT_ID
+              const startedAt = new Date(0)
+              startedAt.setUTCSeconds(content["started_at"])
+              const completedAt = new Date(0)
+              completedAt.setUTCSeconds(content["completed_at"])
+              const exerciseName = content["exercise_name"]
+              const status = content["status"]
+
+              const emoji = status === "SUCCESSFUL" ? "✅" : status === "UNSUCCESSFUL" ? "❌" : "⚠️"
+
+              const statusMessage = `${status} ${emoji}`
+
+              let body = `## Autograding status...
+              |Name|Details|
+              |----|-------|
+              |Exercise name|${exerciseName}|
+              |Status|${statusMessage}|
+              |Job started at|${startedAt.toString()}|
+              |Job completed at|${completedAt.toString()}|
+              |Job took|`${completedAt.getTime() - startedAt.getTime()}` ms|
+              |Comments|<ul>${content["comments"].map(comment => "<li>" + comment + "</li>").join("\n")}</ul>|
+              `
+              console.log(body)
+
               if (content["errors"].length > 0) {
                 let body = "## Autograding status\n|Name|Details|\n|---|---|\n|Status|Unsuccessful ❌|\n|Comments|<ul>"
                 for (const comment of content["errors"]) {
