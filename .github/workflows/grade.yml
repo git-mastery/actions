@@ -111,7 +111,7 @@ jobs:
               const emoji = status === "SUCCESSFUL" ? "✅" : status === "UNSUCCESSFUL" ? "❌" : "⚠️"
               const statusMessage = `${status} ${emoji}`
 
-            const joinedComments = content["comments"].length > 0 ? content["comments"].map(comment => "<li>" + comment + "</li>").join("\n") : "No comments"
+            const joinedComments = content["comments"].length > 0 ? content["comments"].map(comment => "<li>" + comment + "</li>").join("") : "No comments"
 
               let body = `## Autograding status...
 
@@ -121,7 +121,6 @@ jobs:
             |**Status**|${statusMessage}|
             |**Comments**|<ul>${joinedComments}</ul>|`
               const cleanBody = body.replace(/  +g/, '')
-              console.log(cleanBody)
 
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
