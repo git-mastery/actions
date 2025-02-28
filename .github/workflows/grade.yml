@@ -33,19 +33,22 @@ jobs:
             const commentId = comment["data"]["id"]
             return commentId
 
+      - name: Get pull request head repository
+        id: head-name
+        uses: actions/github-script@0.3.0
+        with:
+          result-encoding: string
+          script: |
+            const headLabel = context.payload.pull_request.head.label
+            const parts = headLabel.split(":")
+            return parts[0]
+
       - name: Exporting environment variables
         run: |
           echo "REPO_NAME=$(echo ${{ inputs.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
           echo "STATUS_COMMENT_ID=$(echo ${{ steps.status-comment.outputs.result }})" >> $GITHUB_ENV
           echo "START=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-
-      - name: Get pull request head repository
-        uses: actions/github-script@0.3.0
-        with:
-          github-token: ${{github.token}}
-          script: |
-            console.log(context.payload)
-            return context.payload.number
+          echo "HEAD_NAME=$(echo ${{ steps.head-name.outputs.result }})" >> $GITHUB_ENV
 
       - name: Variables
         if: ${{ inputs.is_local }}
@@ -56,6 +59,7 @@ jobs:
           echo ${{ env.REPO_NAME }}
           echo ${{ env.STATUS_COMMENT_ID }}
           echo ${{ env.START }}
+          echo ${{ env.HEAD_NAME }}
 
       - name: Installing Python (only on act)
         if: ${{ inputs.is_local }}
@@ -63,16 +67,10 @@ jobs:
           apt update
           apt install -y python3 python3-pip git
 
-      - run: |
-          echo ${{ github.head_ref }}
-          echo ${{ github.ref_name }}
-          echo ${{ github.event.pull_request.head.full_name }}
-          echo ${{ github.event.pull_request.base.full_name }}
-
       - name: Checking out submission repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.event.pull_request.head.full_name }}
+          repository: ${{ env.HEAD_NAME }}/${{ env.REPO_NAME }}
           token: ${{ secrets.ORG_PAT }}
           path: main/
           fetch-depth: 0
