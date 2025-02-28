@@ -39,6 +39,14 @@ jobs:
           echo "STATUS_COMMENT_ID=$(echo ${{ steps.status-comment.outputs.result }})" >> $GITHUB_ENV
           echo "START=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
+      - name: Get pull request head repository
+        uses: actions/github-script@0.3.0
+        with:
+          github-token: ${{github.token}}
+          script: |
+            console.log(context.payload)
+            return context.payload.number
+
       - name: Variables
         if: ${{ inputs.is_local }}
         run: |
