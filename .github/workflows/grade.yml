@@ -72,13 +72,6 @@ jobs:
           path: solution/
           fetch-depth: 0
 
-      - name: Fetch all remote branches as local
-        working-directory: solution
-        run: |
-          for remote in $(git branch -r); do 
-            git branch --track ${remote#origin/} $remote 2>/dev/null
-          done
-
       - name: Setup Python (only on Github Actions)
         if: ${{ ! inputs.is_local }}
         uses: actions/setup-python@v5
