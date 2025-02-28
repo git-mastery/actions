@@ -55,14 +55,10 @@ jobs:
           apt update
           apt install -y python3 python3-pip git
 
-      - name: Log
-        run: |
-          echo ${{ github.event.pull_request.head.repo.full_name }}
-
       - name: Checking out submission repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ inputs.actor }}/${{ env.REPO_NAME }}
+          repository: ${{ github.event.pull_request.head.full_name }}
           token: ${{ secrets.ORG_PAT }}
           path: main/
           fetch-depth: 0
