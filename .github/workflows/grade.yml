@@ -72,9 +72,10 @@ jobs:
           path: solution/
           fetch-depth: 0
 
-      - run: |
-          ls
-          ls solution/
+      - name: Fetch all remote branches as local
+        working-directory: solution
+        run: |
+          git branch -r | grep -v '\->' | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
 
       - name: Setup Python (only on Github Actions)
         if: ${{ ! inputs.is_local }}
