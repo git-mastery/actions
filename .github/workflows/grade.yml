@@ -63,6 +63,7 @@ jobs:
           path: main/
           fetch-depth: 0
 
+      # Add post download run
       - name: Checking out solutions repository
         uses: actions/checkout@v4
         with:
@@ -70,6 +71,10 @@ jobs:
           token: ${{ secrets.ORG_PAT }}
           path: solution/
           fetch-depth: 0
+
+      - run: |
+          ls
+          ls solution/
 
       - name: Setup Python (only on Github Actions)
         if: ${{ ! inputs.is_local }}
