@@ -59,6 +59,7 @@ jobs:
           echo ${{ github.head_ref }}
           echo ${{ github.ref_name }}
           echo ${{ github.event.pull_request.head.full_name }}
+          echo ${{ github.event.pull_request.base.full_name }}
 
       - name: Checking out submission repository
         uses: actions/checkout@v4
