@@ -103,7 +103,7 @@ jobs:
         env:
           base_repository: ${{ inputs.repository }}
           is_local: ${{ inputs.is_local }}
-          repository_name: ${{ env.REPO_NAME }}
+          exercise_name: ${{ env.REPO_NAME }}
 
       - name: Copy Python script output to root folder
         run: |
