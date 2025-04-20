@@ -133,7 +133,7 @@ jobs:
             |----|-------|
             |**Exercise name**|${exerciseName}|
             |**Status**|${statusMessage}|
-            |**Comments**|<ul>${joinedComments}</ul>|`
+            |**Feedback**|<ul>${joinedComments}</ul>|`
               const cleanBody = body.replace(/  +g/, '')
 
               await github.rest.issues.updateComment({
