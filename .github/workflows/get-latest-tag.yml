@@ -5,13 +5,13 @@ on:
     outputs:
       ref_name:
         description: Raw reference name
-        value: ${{ jobs.get_latest_tag.outputs.ref_name
+        value: ${{ jobs.get_latest_tag.outputs.ref_name }}
       version_number:
         description: Reference name stripped of leading v
-        value: ${{ jobs.get_latest_tag.outputs.version_number
+        value: ${{ jobs.get_latest_tag.outputs.version_number }}
       should_publish:
         description: Flag determining if a release needs to occur
-        value: ${{ jobs.get_latest_tag.outputs.should_publish
+        value: ${{ jobs.get_latest_tag.outputs.should_publish }}
 
 jobs:
   get_latest_tag:
