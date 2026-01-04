@@ -3,6 +3,9 @@ name: Bump version tag on merge
 on:
   workflow_call:
 
+permissions:
+  contents: write
+
 jobs:
   tag:
     if: github.event.pull_request.merged == true
@@ -12,11 +15,16 @@ jobs:
       group: tag-main
       cancel-in-progress: false
 
-    permissions:
-      contents: write
+    env:
+      PAT: ${{ secrets.ORG_PAT }}
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Printing env
+        run: |
+          echo ${PAT}
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.ORG_PAT }}
