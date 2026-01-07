@@ -2,6 +2,9 @@ name: Get latest tag on repository and determine if release needs to occur
 
 on:
   workflow_call:
+    secrets:
+      ORG_PAT:
+        required: true
     outputs:
       ref_name:
         description: Raw reference name

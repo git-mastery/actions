@@ -2,6 +2,9 @@ name: Bump version tag on merge
 
 on:
   workflow_call:
+    secrets:
+      ORG_PAT:
+        required: true
 
 permissions:
   contents: write
