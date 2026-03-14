@@ -22,10 +22,6 @@ jobs:
       PAT: ${{ secrets.ORG_PAT }}
 
     steps:
-      - name: Printing env
-        run: |
-          echo ${PAT}
-
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
@@ -50,7 +46,7 @@ jobs:
             echo "type=patch" >> $GITHUB_OUTPUT
           else
             echo "No bump label found" >&2
-            exit 1
+            exit 0
           fi
 
       - name: Calculate next version
