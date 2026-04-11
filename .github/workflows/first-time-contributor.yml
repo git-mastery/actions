@@ -1,0 +1,40 @@
+name: First-time contributor reminder
+
+on:
+  workflow_call:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  remind-all-contributors:
+    name: Remind admins to add first-time contributor
+    if: |
+      github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR' ||
+      github.event.pull_request.author_association == 'FIRST_TIMER'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post reminder comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: [
+                `👋 @${{ github.event.pull_request.user.login }} is a first-time contributor to this repository!`,
+                ``,
+                `**Admins:** please remember to add them to the all-contributors list in the [git-mastery/app](https://github.com/git-mastery/app) repository once this PR is merged.`,
+                ``,
+                `**Option 1 — all-contributors bot** (comment on the PR in git-mastery/app):`,
+                `\`\`\``,
+                `@all-contributors please add @${{ github.event.pull_request.user.login }} for code`,
+                `\`\`\``,
+                ``,
+                `**Option 2 — npx** (run locally in the git-mastery/app repo):`,
+                `\`\`\``,
+                `npx all-contributors add ${{ github.event.pull_request.user.login }} code`,
+                `\`\`\``,
+              ].join('\n')
+            });
