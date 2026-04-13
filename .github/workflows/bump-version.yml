@@ -56,7 +56,6 @@ jobs:
         id: version
         if: steps.bump.outputs.type != ''
         run: |
-          BRANCH="${{ github.event.pull_request.base.ref }}"
           v=${{ steps.latest.outputs.tag }}
           v=${v#v}
           IFS=. read major minor patch <<< "$v"
@@ -67,23 +66,7 @@ jobs:
             patch) patch=$((patch+1)) ;;
           esac
 
-          BASE_VERSION="$major.$minor.$patch"
-
-          if [[ "$BRANCH" == "development" ]]; then
-            EXISTING=$(git tag -l "v$BASE_VERSION-beta*" | sort -V | tail -n 1)
-
-            if [[ -z "$EXISTING" ]]; then
-              NEXT="v$BASE_VERSION-beta.1"
-            else
-              NUM=$(echo "$EXISTING" | sed -E 's/.*beta\.?([0-9]*)/\1/')
-              NEXT="v$BASE_VERSION-beta.$((NUM+1))"
-            fi
-
-          else
-            NEXT="v$BASE_VERSION"
-          fi
-
-          echo "next=$NEXT" >> $GITHUB_OUTPUT
+          echo "next=v$major.$minor.$patch" >> $GITHUB_OUTPUT
 
       - name: Create and push tag
         if: steps.bump.outputs.type != ''
